@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech-Tok Pilot — Leskist Boeken</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: #188A3C;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+    .class-info {
+      background: #f0faf4;
+      border: 1px solid #b7e4c7;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #1a5c2e;
+    }
+    .class-info strong { display: block; margin-bottom: 2px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #1a1a1a;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+      background: white;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #188A3C;
+    }
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .date-row > div { margin-bottom: 0; }
+    .date-row input { margin-bottom: 0; }
+    .date-row-wrapper { margin-bottom: 18px; }
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #188A3C;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    button:hover { background: #146830; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+
+    .msg {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+    .msg.success {
+      background: #f0faf4;
+      border: 1px solid #b7e4c7;
+      color: #1a5c2e;
+    }
+    .msg.error {
+      background: #fff0f0;
+      border: 1px solid #ffb3b3;
+      color: #8b0000;
+    }
+
+    /* Bevestigingspagina */
+    #bevestig-view {
+      display: none;
+    }
+    .bevestig-icon {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .bevestig-tabel {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+    .bevestig-tabel td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .bevestig-tabel td:first-child {
+      font-weight: 600;
+      color: #555;
+      width: 40%;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: #188A3C;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- BOEKINGSFORMULIER -->
+  <div id="boek-view">
+    <div class="logo">Tech-Tok</div>
+    <h1>Leskist inboeken</h1>
+    <p class="subtitle">Vul je gegevens in — je ontvangt een bevestigingslink per e-mail.</p>
+
+    <div class="class-info">
+      <strong>Groep 7B — Testschool Pilot</strong>
+      Tenant: Tech-Tok · Achterhoek
+    </div>
+
+    <label for="email">Jouw e-mailadres</label>
+    <input type="email" id="email" placeholder="naam@school.nl" />
+
+    <label for="leskist">Leskist</label>
+    <select id="leskist">
+      <option value="">— Kies een leskist —</option>
+    </select>
+
+    <div class="date-row-wrapper">
+      <label>Periode</label>
+      <div class="date-row">
+        <div>
+          <label for="startdatum" style="font-weight:400; color:#888; font-size:12px;">Startdatum</label>
+          <input type="date" id="startdatum" />
+        </div>
+        <div>
+          <label for="einddatum" style="font-weight:400; color:#888; font-size:12px;">Einddatum</label>
+          <input type="date" id="einddatum" />
+        </div>
+      </div>
+    </div>
+
+    <button id="boek-btn" onclick="stuurMagicLink()">Boekingsverzoek versturen</button>
+
+    <div class="msg" id="boek-msg"></div>
+  </div>
+
+  <!-- BEVESTIGINGSPAGINA (na klikken magic link) -->
+  <div id="bevestig-view">
+    <div class="bevestig-icon" id="bevestig-icon">⏳</div>
+    <h1 id="bevestig-titel" style="text-align:center; margin-bottom:8px;">Boeking bevestigen...</h1>
+    <p class="subtitle" id="bevestig-sub" style="text-align:center;">Even geduld.</p>
+    <table class="bevestig-tabel" id="bevestig-tabel" style="display:none;">
+      <tbody id="bevestig-tbody"></tbody>
+    </table>
+    <a class="back-link" onclick="toonBoekView()">← Terug naar boekingspagina</a>
+  </div>
+
+</div>
+
+<script>
+  // ─── CONFIG ───────────────────────────────────────────────
+  const SUPABASE_URL    = "https://vzyhjwbubwxdowfbhbra.supabase.co";
+  const SUPABASE_ANON   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6eWhqd2J1Ynd4ZG93ZmJoYnJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4MzEwMjIsImV4cCI6MjA1ODQwNzAyMn0.5XKPB4T3IHqHaWYiKbpZKdYnBLKBk6JU-t_TvXYPF0I";
+  const CLASS_ID        = ""; // wordt hieronder opgehaald
+  const FUNCTION_BASE   = `${SUPABASE_URL}/functions/v1`;
+  // ──────────────────────────────────────────────────────────
+
+  let classId = "04015c24-a7f7-4c1b-8db7-0a9ed4620cfb"; // Groep 7B — Testschool Pilot
+  let leskisten = [];
+
+  // Zet minimale datum op vandaag
+  const vandaag = new Date().toISOString().split("T")[0];
+  document.getElementById("startdatum").min = vandaag;
+  document.getElementById("einddatum").min  = vandaag;
+
+  // Auto-bereken einddatum op basis van uitleenduur
+  document.getElementById("startdatum").addEventListener("change", function() {
+    const start = new Date(this.value);
+    const geselecteerdeLeskist = leskisten.find(l => l.id === document.getElementById("leskist").value);
+    if (geselecteerdeLeskist && this.value) {
+      const eind = new Date(start);
+      eind.setDate(eind.getDate() + geselecteerdeLeskist.uitleenduur_dagen);
+      document.getElementById("einddatum").value = eind.toISOString().split("T")[0];
+    }
+    document.getElementById("einddatum").min = this.value;
+  });
+
+  // Laad leskisten — hardcoded voor pilot (geen fetch nodig)
+  async function laadData() {
+    // Haal de IDs op via Supabase SQL Editor: SELECT id, naam, uitleenduur_dagen FROM leskisten;
+    // Vul hier de juiste IDs in uit jouw database
+    const select = document.getElementById("leskist");
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/leskisten?actief=eq.true&select=id,naam,uitleenduur_dagen`,
+        {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_ANON,
+            "Authorization": "Bearer " + SUPABASE_ANON,
+          }
+        }
+      );
+      const data = await res.json();
+      if (res.ok && Array.isArray(data) && data.length > 0) {
+        leskisten = data;
+        leskisten.forEach(l => {
+          const opt = document.createElement("option");
+          opt.value = l.id;
+          opt.textContent = `${l.naam} (${l.uitleenduur_dagen} dagen)`;
+          select.appendChild(opt);
+        });
+        return;
+      }
+    } catch(e) {}
+    // fetch mislukt of 401 → gebruik hardcoded fallback
+
+    // Fallback: hardcoded leskisten
+    leskisten = [
+      { id: "f4d8efc8-153d-4977-9899-996a576fc7ee", naam: "Micro:bit Programmeerkit", uitleenduur_dagen: 14 },
+      { id: "53c891b6-63ac-4be7-a9d0-7665fe794523", naam: "Elektronica Basis", uitleenduur_dagen: 14 },
+    ];
+    leskisten.forEach(l => {
+      const opt = document.createElement("option");
+      opt.value = l.id;
+      opt.textContent = `${l.naam} (${l.uitleenduur_dagen} dagen)`;
+      select.appendChild(opt);
+    });
+  }
+
+  async function stuurMagicLink() {
+    const email      = document.getElementById("email").value.trim();
+    const leskist_id = document.getElementById("leskist").value;
+    const startdatum = document.getElementById("startdatum").value;
+    const einddatum  = document.getElementById("einddatum").value;
+    const msg        = document.getElementById("boek-msg");
+    const btn        = document.getElementById("boek-btn");
+
+    msg.style.display = "none";
+
+    if (!email || !leskist_id || !startdatum || !einddatum) {
+      toonMsg("Vul alle velden in.", "error");
+      return;
+    }
+    if (einddatum <= startdatum) {
+      toonMsg("De einddatum moet na de startdatum liggen.", "error");
+      return;
+    }
+    if (!classId) {
+      toonMsg("Klas kon niet worden geladen. Herlaad de pagina.", "error");
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Versturen...';
+
+    try {
+      const res = await fetch(`${FUNCTION_BASE}/stuur-magic-link`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON },
+        body: JSON.stringify({ email, class_id: classId, leskist_id, startdatum, einddatum }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toonMsg(`✅ Controleer je inbox op <strong>${email}</strong> — je ontvangt een bevestigingslink. De link is 15 minuten geldig.`, "success");
+        btn.innerHTML = "Verstuurd ✓";
+      } else {
+        toonMsg(`❌ ${data.error ?? "Er ging iets mis."}`, "error");
+        btn.disabled = false;
+        btn.innerHTML = "Boekingsverzoek versturen";
+      }
+    } catch (e) {
+      toonMsg("❌ Netwerkfout. Controleer je verbinding.", "error");
+      btn.disabled = false;
+      btn.innerHTML = "Boekingsverzoek versturen";
+    }
+  }
+
+  function toonMsg(tekst, type) {
+    const el = document.getElementById("boek-msg");
+    el.innerHTML = tekst;
+    el.className = `msg ${type}`;
+    el.style.display = "block";
+  }
+
+  // ─── MAGIC LINK AFHANDELING ────────────────────────────────
+  async function verwerkToken() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (!token) return;
+
+    // Toon bevestigingsview
+    document.getElementById("boek-view").style.display = "none";
+    document.getElementById("bevestig-view").style.display = "block";
+
+    try {
+      const res = await fetch(`${FUNCTION_BASE}/bevestig-boeking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        document.getElementById("bevestig-icon").textContent = "✅";
+        document.getElementById("bevestig-titel").textContent = "Boeking bevestigd!";
+        document.getElementById("bevestig-sub").textContent = "De leskist is voor jouw klas gereserveerd.";
+
+        const tbody = document.getElementById("bevestig-tbody");
+        tbody.innerHTML = `
+          <tr><td>Leskist</td><td>${data.leskist ?? "—"}</td></tr>
+          <tr><td>Startdatum</td><td>${data.startdatum ?? "—"}</td></tr>
+          <tr><td>Retourdatum</td><td>${data.einddatum ?? "—"}</td></tr>
+        `;
+        document.getElementById("bevestig-tabel").style.display = "table";
+      } else {
+        document.getElementById("bevestig-icon").textContent = "❌";
+        document.getElementById("bevestig-titel").textContent = "Niet gelukt";
+        document.getElementById("bevestig-sub").textContent = data.error ?? "Er ging iets mis.";
+      }
+    } catch (e) {
+      document.getElementById("bevestig-icon").textContent = "❌";
+      document.getElementById("bevestig-titel").textContent = "Netwerkfout";
+      document.getElementById("bevestig-sub").textContent = "Controleer je verbinding en probeer opnieuw.";
+    }
+  }
+
+  function toonBoekView() {
+    document.getElementById("bevestig-view").style.display = "none";
+    document.getElementById("boek-view").style.display = "block";
+    // Verwijder token uit URL
+    window.history.replaceState({}, "", window.location.pathname);
+  }
+
+  // Init
+  laadData();
+  verwerkToken();
+</script>
+
+</body>
+</html>
